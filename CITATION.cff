@@ -2,7 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "sjtsk: Slovak S-JTSK (JTSK, JTSK03) ↔ ETRS89 transformations the official way"
 version: 0.1.0
-date-released: 2026-11-22
+date-released: 2026-11-23
+doi: 10.5281/zenodo.24477732
 license: [MIT, CC-BY-4.0]
 repository-code: "https://github.com/SimonSalon25/sjtsk"
 authors:
