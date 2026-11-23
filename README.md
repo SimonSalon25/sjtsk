@@ -1,5 +1,7 @@
 # sjtsk
 
+[![DOI](https://zenodo.org/badge/1468805361.svg)](https://doi.org/10.5281/zenodo.24477732)
+
 Slovak coordinates done the official way: **S-JTSK (JTSK, JTSK03) ↔ ETRS89 / WGS 84** with the transformation of
 the Slovak Office of Geodesy, Cartography and Cadastre (ÚGKK) and the GKÚ grid — included, so the result does not
 depend on how PROJ happens to be installed.
