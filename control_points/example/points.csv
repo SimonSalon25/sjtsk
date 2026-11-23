@@ -1,0 +1,13 @@
+id,name,sjtsk_y,sjtsk_x,realization,etrs_lat,etrs_lon,etrs_h,frame,epoch,position_accuracy_m,source,note
+E01,invented point 1,572760.286,1280259.505,JTSK03,48.150000000,17.120000000,,ETRF2000,,0.02,synthetic,format test only
+E02,invented point 2,534587.828,1256070.766,JTSK,48.400000000,17.600000000,,ETRF2000,,0.02,synthetic,format test only
+E03,invented point 3,498698.912,1270522.130,JTSK03,48.300000000,18.100000000,,ETRF2000,,0.02,synthetic,format test only
+E04,invented point 4,442523.978,1172578.797,JTSK,49.220000000,18.750000000,,ETRF2000,,0.02,synthetic,format test only
+E05,invented point 5,417430.911,1228044.666,JTSK03,48.740000000,19.150000000,,ETRF2000,,0.02,synthetic,format test only
+E06,invented point 6,381838.943,1192682.588,JTSK,49.080000000,19.600000000,,ETRF2000,,0.02,synthetic,format test only
+E07,invented point 7,330939.438,1198159.806,JTSK03,49.060000000,20.300000000,,ETRF2000,,0.02,synthetic,format test only
+E08,invented point 8,300238.161,1239982.391,JTSK,48.700000000,20.750000000,,ETRF2000,,0.02,synthetic,format test only
+E09,invented point 9,262642.802,1239634.985,JTSK03,48.720000000,21.260000000,,ETRF2000,,0.02,synthetic,format test only
+E10,invented point 10,232684.934,1209790.469,JTSK,49.000000000,21.650000000,,ETRF2000,,0.02,synthetic,format test only
+E11,invented point 11,199980.939,1216616.837,JTSK03,48.950000000,22.100000000,,ETRF2000,,0.02,synthetic,format test only
+E12,invented point 12,471888.398,1306294.816,JTSK,48.000000000,18.500000000,,ETRF2000,,0.02,synthetic,format test only

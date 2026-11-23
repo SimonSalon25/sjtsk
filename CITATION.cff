@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "sjtsk: Slovak S-JTSK (JTSK, JTSK03) ↔ ETRS89 transformations the official way"
+version: 0.1.0
+date-released: 2026-11-22
+license: [MIT, CC-BY-4.0]
+repository-code: "https://github.com/SimonSalon25/sjtsk"
+authors:
+  - family-names: "Saloň"
+    given-names: "Šimon"
+    affiliation: "Department of Forest Resource Planning and Informatics, Technical University in Zvolen"
+    orcid: "https://orcid.org/0009-0009-8273-8159"
+  - family-names: "Koreň"
+    given-names: "Milan"
+    affiliation: "Department of Forest Resource Planning and Informatics, Technical University in Zvolen"
+    orcid: "https://orcid.org/0000-0002-2956-944X"
+  - family-names: "Chudý"
+    given-names: "František"
+    affiliation: "Department of Forest Resource Planning and Informatics, Technical University in Zvolen"
+  - family-names: "Tomaštík"
+    given-names: "Julián"
+    affiliation: "Department of Forest Resource Planning and Informatics, Technical University in Zvolen"
+    orcid: "https://orcid.org/0000-0001-6691-8357"
+  - family-names: "Kardoš"
+    given-names: "Miroslav"
+    affiliation: "Department of Forest Resource Planning and Informatics, Technical University in Zvolen"
+    orcid: "https://orcid.org/0000-0002-9458-5040"
+keywords: [S-JTSK, JTSK03, ETRS89, coordinate transformation, Slovakia, PROJ, geodesy]

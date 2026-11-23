@@ -1,0 +1,11 @@
+{
+  "set": "example",
+  "description": "synthetic points for testing the format — S-JTSK computed with ugkk + 2 cm noise",
+  "author": "sjtsk",
+  "contact": "",
+  "date": "2026-11-22",
+  "licence": "CC0",
+  "publishable": true,
+  "method": "tools/make_example_points.py",
+  "reference_transformation_according_to_author": "ugkk"
+}

@@ -1,0 +1,14 @@
+sk_gku_JTSK03_to_JTSK.tif
+
+Model of the shifts between the JTSK03 and JTSK realizations of the S-JTSK coordinate reference system in Slovakia.
+Author: Geodetický a kartografický ústav Bratislava (GKÚ, Geodetic and Cartographic Institute Bratislava), © 2013.
+Licence: Creative Commons Attribution 4.0 (CC BY 4.0), http://creativecommons.org/licenses/by/4.0/
+Source: https://www.geoportal.sk/sk/geodeticke-zaklady/download/
+GeoTIFF conversion: the PROJ-data project (OSGeo), sk_gku/sk_gku_JTSK03_to_JTSK.tif
+  (converted from Slovakia_JTSK03_to_JTSK.gsb, last change 2016-03-21). The file is included unchanged.
+EPSG usage: transformation EPSG:8364 "S-JTSK [JTSK03] to S-JTSK (1)".
+SHA-256: e51fea1de2103b80cb843a01b168e4613f9ec0165d4aecbb93c389db6946078e
+
+GKÚ notes that the model describes the systematic inhomogeneity of the JTSK network, not local inhomogeneities
+at the centimetre level, and recommends verifying results with the official transformation service
+https://zbgis.skgeodesy.sk/rts/
