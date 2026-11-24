@@ -16,6 +16,9 @@ import shutil
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):  # a Windows console (cp1252) cannot print → or – and would fail
+    sys.stdout.reconfigure(errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 import sjtsk  # noqa: E402
