@@ -13,6 +13,7 @@ Documentation and testing only; the transformations are unchanged.
   `tests/test_rts_agreement.py`.
 - Legal reference made precise: regulation 300/2009 Coll., § 18(1) (JTSK for the cadastre) and § 2(10) (RTS binding).
 - Install from GitHub (not on PyPI yet); tests run on GitHub Actions (Linux, Windows; Python 3.10, 3.13).
+- The command-line tools no longer fail on a Windows console that cannot print → or – (found by the new Windows CI).
 - AI_DISCLOSURE: the model used in each session was not recorded.
 
 ## 0.1.0 — 2026-11-22
