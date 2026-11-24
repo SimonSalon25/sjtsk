@@ -19,6 +19,9 @@ import sys
 import zipfile
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):  # a Windows console (cp1252) cannot print → or – and would fail
+    sys.stdout.reconfigure(errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 DIR = ROOT / "validation" / "rts"
 M_PER_DEG_LAT = 111_200.0
