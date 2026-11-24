@@ -6,7 +6,8 @@ All numbers below are reproduced by `python tools/compare_variants.py` and guard
 ## 1. The problem
 
 Slovak data come in two realizations of the S-JTSK system: **JTSK** (EPSG:5514; cadastre — Slovak regulation
-ÚGKK 300/2009 § 18 requires results for the cadastre in the JTSK realization, EPSG::5513) and **JTSK03**
+ÚGKK No. 300/2009 Coll., § 18(1), as amended (consolidated text of 1 August 2025), requires results for the cadastre
+in the JTSK realization, EPSG::5513) and **JTSK03**
 (EPSG:8353; national topographic database ZBGIS, the DMR5 elevation model, national forest maps).
 GNSS gives ETRS89 or WGS 84. A GIS application must therefore transform between four systems — and the result
 depends on which transformation PROJ picks:
@@ -33,6 +34,11 @@ Findings:
    Irrelevant for phone GNSS (3–5 m), relevant for a paper on transformation accuracy.
 
 ## 2. The official chain (variant `ugkk`, the default)
+
+*Official* here means the transformation that ÚGKK defines and GKÚ publishes with its EPSG codes; for work whose
+results go to the cadastre, the departmental transformation service RTS (zbgis.skgeodesy.sk/rts) is binding
+(regulation 300/2009, § 2(10)). Agreement with the EPSG definition is tested below; agreement with RTS itself is
+checked separately (section 5.1).
 
 ETRS89 → JTSK03 by the ÚGKK Helmert transformation (EPSG:8365, coordinate frame, declared accuracy 1 mm), then
 JTSK03 → JTSK by the GKÚ grid `sk_gku_JTSK03_to_JTSK.tif` (EPSG:8364, bilinear). In EPSG this is "ETRS89 to S-JTSK
@@ -82,6 +88,16 @@ centre of a window): within 1 km at most 3 cm, 2 km 7 cm, 5 km 14 cm, 10 km 21 c
 **Effect of ellipsoidal height** (the plane result is computed at h = 0): below 6.5 mm at 1,500 m and below 12 mm at
 2,600 m (the highest point of Slovakia).
 
+**QGIS 3.44.12 (PROJ 9.8.1, GDAL 3.13.1, Windows, 23 November 2026).** 12 test points across Slovakia, given in
+ETRS89; expected S-JTSK coordinates computed by this package (variant `ugkk`) — so this test shows what QGIS does
+relative to the EPSG definition, not the accuracy of either. *Reproject layer* to EPSG:8353 agrees to 0.6 mm (the
+expected values were rounded to millimetres; the ÚGKK Helmert is in PROJ). To EPSG:5514 QGIS uses "Inverse of
+S-JTSK to ETRS89 (1)" (the Czech 7-parameter solution, declared accuracy 1 m for Czechia): it ranks the Czech ČÚZK
+grid first, does not have it, and falls back to this operation. On the 12 test points the error grows from 0.54 m in the west to
+3.60 m in the east; on the 3,978 points of the table above (row "Czech parameters", the same operation) it is 1.87 m
+on average and up to 4.18 m, 3.1–4.2 m east of 21.5° E. Installing the GKÚ grid does not change the choice; setting the official chain as the preferred
+transformation (Settings → Options → Transformations, done by the QGIS plugin) gives 0.6 mm.
+
 ## 4. Portable implementation
 
 `sjtsk.portable` is the same chain in pure Python (`math` only) with the grid in a simple binary format, as a
@@ -97,6 +113,39 @@ variant). The included set is synthetic and checks only the format and the compu
 (national trigonometric network, SKPOS measurements) are the next step and would turn section 3 from a
 model comparison into an accuracy assessment.
 
+### 5.1 Check against the official transformation service (RTS)
+
+All comparisons in sections 2–4 use the EPSG definition of the chain as implemented in PROJ, so an error in that
+definition would go unnoticed. The independent check is the RTS service itself: 56 ETRS89 points spread over
+Slovakia (`validation/rts/points_etrs89.csv`; chosen by `tools/make_rts_points.py` to cover the whole territory, the
+largest JTSK03–JTSK differences in the south-west, the smallest in Orava / Liptov and the far east, where QGIS's
+default is worst) are transformed by RTS to JTSK03 and JTSK, and the JTSK coordinates back to ETRS89.
+`tools/compare_rts.py` compares the RTS output with this package. Runs: 24 November 2026, RTS 3.9, details in
+`validation/rts/rts_runs.txt`; the RTS outputs are kept unchanged next to it.
+
+| run | RTS − this package (`ugkk`) | mean | SD of each component | max |
+|---|---|---:|---:|---:|
+| 1 ETRS89 → JTSK03 | ΔY = +0.68 mm, ΔX = +5.26 mm (RTS further west and south) | 5.31 mm | 0.3 mm | 5.97 mm |
+| 2 ETRS89 → JTSK | ΔY = +0.75 mm, ΔX = +5.38 mm | 5.44 mm | 0.3 mm | 6.02 mm |
+| 3 JTSK → ETRS89 | ΔN = −5.18 mm, ΔE = −0.32 mm (RTS further south) | 5.20 mm | 0.1 / 0.2 mm | 5.35 mm |
+| grid step (run 2 − run 1) | ΔY = +0.07 mm, ΔX = +0.12 mm | | 0.4 mm | 1.06 mm |
+
+Findings:
+- **The grid step JTSK03 → JTSK is the same as in RTS** — the differences are those of two outputs rounded to 1 mm.
+- **The Helmert step differs by a constant 5.3 mm.** The scatter equals the rounding of the RTS output, so over
+  Slovakia it is a pure shift of the result, about 5.3 mm to the south. It is not a height effect (an ellipsoidal
+  height other than 0 would make the difference vary over the territory, which it does not) and not the grid.
+- **RTS is consistent in both directions; the EPSG pair is not.** Transforming a point by 8365 and back by 8367
+  moves it by 10.6 mm (10.57 mm north, 0.64 mm east). RTS applied to this package's forward result returns a point
+  5.39 mm north of the original — consistent with RTS being one transformation and its inverse, lying between 8365
+  and the inverse of 8367. The GKÚ technical report on the ETRS89 ↔ S-JTSK keys (2014, version 3.0) derives the
+  reverse key separately because the plain inverse of the Helmert form leaves a systematic error of several
+  millimetres; which formula RTS uses is being clarified with GKÚ.
+- Meaning: this package equals the EPSG definition (and PROJ with the GKÚ grid) to below 0.01 mm and RTS to 6 mm.
+  For GIS, forestry and GNSS work the difference is negligible; for results delivered to the cadastre RTS is
+  binding and should be used. QGIS 3.44's default operation is 1.91 m off RTS on average and up to 4.10 m (run 2),
+  which confirms section 3 against the binding service.
+
 ## 6. Verification
 
 | claim | test |
@@ -108,6 +157,7 @@ model comparison into an accuracy assessment.
 | other notations of S-JTSK | 5513, 2065, 8352: pure axis conversion |
 | outside the grid | counted, Helmert only, finite |
 | recognising systems | EPSG, ESRI, WKT1/WKT2, LOCAL_CS, pyproj and rasterio objects |
+| agreement with RTS (section 5.1) | 56 points, stored RTS output: grid step ≤ 1.1 mm, constant 5.3 mm offset of the Helmert step, max 6.0 mm |
 | control point input | swapped axes, negative E/N, swapped lat/lon, missing epoch, duplicates, decimal comma, missing column |
 | portable implementation | equals the converter on 3,978 points |
 | the tests themselves | `tools/mutations.py`: 12 deliberate bugs, each makes the suite fail |

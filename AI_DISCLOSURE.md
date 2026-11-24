@@ -7,7 +7,7 @@ is itself one of the results we want to share (see the planned paper on AI-assis
 
 | tool | where |
 |---|---|
-| Claude (Anthropic) in the claude.ai agent workspace; model **Claude Opus 5.5** for this package (November 2026) | code, tests, documentation, this file |
+| Claude models (Anthropic) in the claude.ai agent workspace, including **Claude Opus 5.5**, for this package (November 2026); the model used in each session was not recorded | code, tests, documentation, this file |
 | Claude models in earlier sessions of the parent application *Lesná mapa* (2026; exact model versions per session were not recorded) | the original Slovak implementation from which this package was translated |
 
 ## Division of work

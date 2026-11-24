@@ -1,0 +1,11 @@
+RTS runs for METHODOLOGY.md section 5.1
+service: https://zbgis.skgeodesy.sk/rts/sk/Transform, version 3.9 (26.05.00), run by Šimon Saloň on 24 November 2026
+settings: TXT/CSV, column separator semicolon, decimal point, heights: no height transformation
+
+run 1  rts_input_etrs89.zip  ETRS89-LatLon [EPSG:4258] -> S-JTSK (JTSK03) [EPSG:8352]  output rts_output_1_jtsk03.txt
+run 2  rts_input_etrs89.zip  ETRS89-LatLon [EPSG:4258] -> S-JTSK (JTSK) [EPSG:5513]    output rts_output_2_jtsk.txt
+run 3  rts_input_jtsk.zip    S-JTSK (JTSK) [EPSG:5513] -> ETRS89-LatLon [EPSG:4258]    output rts_output_3_etrs89.txt
+
+Runs 1 and 2 were made without "file contains a header", so RTS also transformed the header row (the line
+starting "longitude;" in the output); it is not a point and the comparison ignores it. Output files are unchanged.
+RTS writes S-JTSK to 3 decimals (1 mm) and latitude/longitude to 9 decimals.

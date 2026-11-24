@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sjtsk"
-version = "0.1.0"
+version = "0.1.1"
 description = "Slovak S-JTSK (JTSK, JTSK03) ↔ ETRS89 / WGS 84 coordinate transformations the official ÚGKK way, with the GKÚ grid included"
 readme = "README.md"
 license = "MIT AND CC-BY-4.0"

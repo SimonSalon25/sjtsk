@@ -16,7 +16,7 @@ from .transform import (GRID_PATH, Converter, TransformError, converter, grid_pa
                         transform_gdf, transform_geometry, transform_points)
 from .variants import DEFAULT_VARIANT, VARIANTS, Variant, variant
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "JTSK", "JTSK03", "ETRS89", "WGS84", "KNOWN", "Crs", "identify", "epsg_from", "is_unusable",

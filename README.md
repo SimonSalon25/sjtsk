@@ -1,6 +1,7 @@
 # sjtsk
 
 [![DOI](https://zenodo.org/badge/1468805361.svg)](https://doi.org/10.5281/zenodo.24477732)
+[![tests](https://github.com/SimonSalon25/sjtsk/actions/workflows/tests.yml/badge.svg)](https://github.com/SimonSalon25/sjtsk/actions/workflows/tests.yml)
 
 Slovak coordinates done the official way: **S-JTSK (JTSK, JTSK03) ↔ ETRS89 / WGS 84** with the transformation of
 the Slovak Office of Geodesy, Cartography and Cadastre (ÚGKK) and the GKÚ grid — included, so the result does not
@@ -21,22 +22,24 @@ sjtsk.identify('LOCAL_CS[..., AUTHORITY["EPSG","8353"]]')   # → JTSK03 (how th
 
 ## Problem, state of the art and solution
 
-**Problem.** Spatial data in Slovakia come in three coordinate systems: the cadastre in S-JTSK [JTSK] (EPSG:5514,
-required for cadastral deliveries by ÚGKK regulation 300/2009 § 18), the national datasets — topographic database
+**Problem.** Spatial data in Slovakia come in three coordinate systems: the cadastre in S-JTSK [JTSK] (EPSG:5514;
+results delivered to the cadastre must be in JTSK, EPSG::5513, by ÚGKK regulation No. 300/2009 Coll., § 18(1), as
+amended), the national datasets — topographic database
 ZBGIS, elevation model DMR5, national forest maps — in S-JTSK [JTSK03] (EPSG:8353), and GNSS field data in ETRS89 or
 WGS 84. Forest stands, cadastral parcels, field surveys and national rasters can be compared only if all of them are
 transformed the same way. The official way is defined by ÚGKK: the Helmert transformation ETRS89 ↔ JTSK03 (EPSG 8365 /
-8367) and the GKÚ grid JTSK03 ↔ JTSK (EPSG 8364).
+8367) and the GKÚ grid JTSK03 ↔ JTSK (EPSG 8364); for work whose results go to the cadastre, the departmental
+transformation service RTS (zbgis.skgeodesy.sk/rts) is binding (§ 2(10) of the same regulation).
 
-**State as of 23 November 2026** (measured on 3,978 points covering Slovakia and in QGIS; [METHODOLOGY.md](METHODOLOGY.md)):
+**State as of 23 November 2026** (computed on 3,978 points covering Slovakia and tested in QGIS; [METHODOLOGY.md](METHODOLOGY.md)):
 - common GIS software does not apply the official transformation reliably — PROJ picks "the best available"
   operation, and that depends on the installation;
 - the same point given in ETRS89 or in WGS 84 ends up up to **1.36 m** apart; the usual WGS 84 parameters are up to
   **1.69 m** off the official result;
 - JTSK03 data are often taken as JTSK, although the two differ by up to **1.64 m**;
 - QGIS 3.44.12 (PROJ 9.8.1, Windows) transforms ETRS89 → EPSG:5514 with the Czech parameters "S-JTSK to ETRS89 (1)":
-  **0.5 m in western to 3.6 m in eastern Slovakia** off the official result; installing the GKÚ grid alone does not
-  change this choice.
+  off the official ÚGKK chain by **up to 4.2 m** (mean 1.9 m; 3.1–4.2 m in eastern Slovakia), confirmed in QGIS on
+  12 test points (0.54–3.60 m); installing the GKÚ grid alone does not change this choice.
 
 | variant | mean | max |
 |---|---:|---:|
@@ -44,7 +47,19 @@ transformed the same way. The official way is defined by ÚGKK: the Helmert tran
 | `sk3` — PROJ's choice for ETRS89 without the grid | 0.31 m | 1.12 m |
 | `sk4` — PROJ's choice for WGS 84, the usual TOWGS84 | 0.68 m | 1.69 m |
 | JTSK03 taken as JTSK | 0.69 m | 1.64 m |
-| QGIS 3.44 default ETRS89 → 5514 (Czech parameters), 12 control points | — | 3.60 m |
+| QGIS 3.44 default ETRS89 → 5514 — Czech parameters "S-JTSK to ETRS89 (1)" | 1.87 m | 4.18 m |
+
+All figures are differences from the official ÚGKK chain as defined in EPSG (8442 / 8443) and implemented in PROJ
+— a comparison of models on computed points, not an accuracy assessment.
+
+**Check against the binding RTS service** (24 November 2026, 56 points across Slovakia, [`validation/rts/`](validation/rts/)):
+the GKÚ grid step JTSK03 → JTSK agrees with RTS to the rounding of its output (≤ 1.1 mm). The Helmert step
+ETRS89 ↔ JTSK03 differs by an almost constant **5.3 mm** (RTS lies 5.3 mm further south, standard deviation 0.3 mm =
+the rounding of the RTS output, max 6.0 mm), in both directions. The EPSG pair used here and in PROJ (8365 forward,
+8367 reverse) does not close on a round trip (10.6 mm); RTS behaves as one consistent transformation lying between
+the two. Which parameters RTS uses is being clarified with GKÚ. For GIS, forestry and GNSS work the difference is
+negligible; for results that go to the cadastre use RTS, which is binding. QGIS 3.44's default operation is
+**1.91 m off RTS on average and up to 4.10 m**.
 
 **Solution.** This library implements the official ÚGKK chain with the GKÚ grid included, so the result does not
 depend on how PROJ is installed (equal to PROJ with the official grid to below 0.01 mm); one path for ETRS89 and
@@ -54,7 +69,7 @@ WGS 84; JTSK03 recognised and transformed, also when written as `LOCAL_CS` (DMR5
 and sets it as QGIS's preferred one.
 
 **Aim.** Forest stand boundaries, cadastral parcels, GNSS field data and national rasters in Slovakia should match
-at the level of the official transformation (millimetres) regardless of the software and its installation — with
+at the level of the official transformation (within millimetres) regardless of the software and its installation — with
 an open, reproducible method that others can check and reuse.
 
 Also included:
@@ -66,8 +81,8 @@ Also included:
 ## Install and test
 
 ```bash
-pip install sjtsk                    # numpy, pyproj
-pip install "sjtsk[geo]"             # + shapely / geopandas for geometries
+pip install "sjtsk @ git+https://github.com/SimonSalon25/sjtsk"        # numpy, pyproj (not on PyPI yet)
+pip install "sjtsk[geo] @ git+https://github.com/SimonSalon25/sjtsk"   # + shapely / geopandas for geometries
 pip install -e ".[test]" && pytest && python tools/mutations.py
 python tools/compare_variants.py     # reproduces the table above
 ```
