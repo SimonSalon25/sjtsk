@@ -20,6 +20,9 @@ import warnings
 import zipfile
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):  # a Windows console (cp1252) cannot print → or – and would fail
+    sys.stdout.reconfigure(errors="replace")
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
